@@ -9,20 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.1.4/dist/css/datepicker-bs4.min.css">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
-    <style>
-      .my-footer {
-        background-color: rgb(20, 0, 56);
-        height: 5em;
-        margin-top: 1.5em;
-        color: white;
-        font-size: 80%;
-        padding: 1.5em;
-      }
-      .room-image  {
-        width: 50%;
-      }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
   </head>
   <body>
 
@@ -126,7 +113,17 @@
   document.getElementById("colorButton").addEventListener("click", function() {
     // notify("this is my message", "success")
     // notifyModal("title", "<em>Hello World</em>", "success", "This is Golang")
-    attention.error({msg: "Hello World!"});
+    let html = `
+      <form id="check-availability-form" action="" method="post" novalidate class="needs-validation row container-fluid mx-auto" >
+        <div class="col-6">
+          <input disabled required class="form-control" name="start" id="start" placeholder="Arrival" type="text" />
+        </div>
+        <div class="col-6">
+          <input disabled required class="form-control" name="end" id="end" placeholder="Departure" type="text" />
+        </div>
+      </form>
+    `
+    attention.custom({msg: html, title: "Choose your dates"});
   });
 
   const elem = document.getElementById('reservation-dates');
@@ -204,10 +201,48 @@
       })
     }
 
+    async function custom(c) {
+      const {
+        msg = "",
+        title = "",
+      } = c;
+
+      const { value: formValues } = await Swal.fire({
+        title: title,
+        html: msg,
+        backdrop: false,
+        focusConfirm: false,
+        scrollbarPadding: false,
+        showCancelButton: true,
+        willOpen: () => {
+          const elem = document.getElementById("check-availability-form");
+          const rp = new DateRangePicker(elem, {
+            format: "yyyy-mm-dd",
+            showOnFocus: true,
+          })
+        },
+        didOpen: () => {
+          document.getElementById('start').removeAttribute('disabled');
+          document.getElementById('end').removeAttribute('disabled');
+        },
+        preConfirm: () => {
+          return [
+            document.getElementById('start').value,
+            document.getElementById('end').value
+          ]
+        }
+      })
+
+      if (formValues) {
+        Swal.fire(JSON.stringify(formValues))
+      }
+    }
+
     return {
       error: error,
       toast: toast,
       success: success,
+      custom: custom,
     }
   };
   </script>
