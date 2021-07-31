@@ -1,0 +1,44 @@
+{{template "base" .}}
+
+{{define "content"}}
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <img src="/static/images/marjors-suite.png" class="img-thumbnail room-image mx-auto d-block" alt="room image">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h1 class="text-center mt-4">Amaryllis Suite</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore ea animi vitae numquam corporis dolores officiis! Illum aspernatur, laborum, nam sed quo perferendis iste doloribus vero aliquam voluptas obcaecati sapiente?
+        Maxime, dolorum eius! Laboriosam temporibus, perferendis ipsam nisi quibusdam repellat est atque quisquam, dolorum qui magnam impedit excepturi quia maxime unde sapiente dolorem, fugiat commodi. Aut molestiae impedit porro corrupti?
+        Enim hic accusamus, voluptatum dicta ipsam, vero quisquam quas incidunt adipisci perferendis ex animi, iusto vel nisi quia mollitia corrupti aliquam necessitatibus. Distinctio consequatur alias explicabo quas, dolor doloribus eaque?
+        Accusamus maiores quisquam iure saepe sapiente ad officia a similique sed? Libero ipsa cumque cupiditate dignissimos tenetur asperiores animi quaerat sapiente voluptatibus optio, molestiae accusamus aliquam eius dolorem exercitationem consequatur.
+        Non aperiam quod ea modi repellat eos eveniet, id suscipit? Fugit porro libero sed ducimus. Iste, quibusdam fugit minima eaque dicta dolorum nihil inventore omnis quod laudantium sapiente reiciendis suscipit.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <a id="search-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+      </div>
+    </div>
+  </div>
+{{end}}
+
+{{define "js"}}
+  <script>
+    document.getElementById("search-availability-button").addEventListener("click", function() {
+      let html = `
+        <form id="check-availability-form" action="" method="post" novalidate class="needs-validation row container-fluid mx-auto" >
+          <div class="col-6">
+            <input disabled required class="form-control" name="start" id="start" placeholder="Arrival" type="text" />
+          </div>
+          <div class="col-6">
+            <input disabled required class="form-control" name="end" id="end" placeholder="Departure" type="text" />
+          </div>
+        </form>
+      `
+      attention.custom({msg: html, title: "Choose your dates"});
+    });
+  </script>
+{{end}}

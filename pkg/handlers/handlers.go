@@ -48,3 +48,24 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 		StringMap: stringMap,
 	})
 }
+
+// Renders the pages of the website
+func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "make-reservation.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) Amaryllis(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "amaryllis.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) Lotus(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "lotus.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "search-availability.page.tmpl", &models.TemplateData{})
+}
+
+func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, "contact.page.tmpl", &models.TemplateData{})
+}
