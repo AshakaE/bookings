@@ -7,26 +7,27 @@ import (
 	"net/http"
 
 	"github.com/ashakae/bookings/internal/config"
+	"github.com/ashakae/bookings/internal/forms"
 	"github.com/ashakae/bookings/internal/models"
 	"github.com/ashakae/bookings/internal/render"
 )
 
-//Repo the repository used by the handlers
+// Repo the repository used by the handlers
 var Repo *Repository
 
-//Repository is the repository type
+// Repository is the repository type
 type Repository struct {
 	App *config.AppConfig
 }
 
-//NewRepo creates a new Repository
+// NewRepo creates a new Repository
 func NewRepo(a *config.AppConfig) *Repository {
 	return &Repository{
 		App: a,
 	}
 }
 
-//NewHandlers sets the repositoryfor the handlers
+// NewHandlers sets the repositoryfor the handlers
 func NewHandlers(r *Repository) {
 	Repo = r
 }
@@ -54,7 +55,12 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 
 // Reservation - renders the resevation page
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{})
+	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{Form: forms.New(nil)})
+}
+
+// PostReservation handles the posting of a reservation form
+func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+	// render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{})
 }
 
 // Amaryllis - renders the Amaryllis page
