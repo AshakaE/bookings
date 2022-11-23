@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,15 +10,19 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/ashakae/bookings/internal/config"
 	"github.com/ashakae/bookings/internal/handlers"
+	"github.com/ashakae/bookings/internal/models"
 	"github.com/ashakae/bookings/internal/render"
 )
 
 const portNumber = ":8080"
 
-var app config.AppConfig
-var session *scs.SessionManager
+var (
+	app     config.AppConfig
+	session *scs.SessionManager
+)
 
 func main() {
+	gob.Register(models.Reservation{})
 	app.InProduction = false
 
 	session = scs.New()
