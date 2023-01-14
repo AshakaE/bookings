@@ -17,6 +17,21 @@ var (
 	testApp config.AppConfig
 )
 
+type myWriter struct{}
+
+func (tw *myWriter) Header() http.Header {
+	var h http.Header
+	return h
+}
+
+func (tw *myWriter) Write(b []byte) (int, error) {
+	length := len(b)
+	return length, nil
+}
+
+func (tw *myWriter) WriteHeader(i int){
+}
+
 func TestMain(m *testing.M) {
 	gob.Register(models.Reservation{})
 	testApp.InProduction = false

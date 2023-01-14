@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
@@ -13,27 +14,29 @@ import (
 	"github.com/justinas/nosurf"
 )
 
-var functions = template.FuncMap{}
-var app *config.AppConfig
-var pathToTemplates = "./templates"
+var (
+	functions       = template.FuncMap{}
+	app             *config.AppConfig
+	pathToTemplates = "./templates"
+)
 
-//Newtemplate sets the config for the template package
+// Newtemplate sets the config for the template package
 func NewTemplate(a *config.AppConfig) {
 	app = a
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
-	td.Flash =  app.Session.PopString(r.Context(), "flash")
-	td.Error =  app.Session.PopString(r.Context(), "error")
-	td.Warning =  app.Session.PopString(r.Context(), "warning")
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 	var tc map[string]*template.Template
 	if app.UseCache {
-		//get the template cache from the app config
+		// get the template cache from the app config
 		tc = app.TemplateCache
 	} else {
 		tc, _ = CreateTemplateCache()
@@ -42,6 +45,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	t, ok := tc[tmpl]
 	if !ok {
 		log.Fatal("Could not get template from template cache")
+		return errors.New("Can't get template from cache")
 	}
 
 	buf := new(bytes.Buffer)
@@ -53,7 +57,10 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	_, err := buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("Error wrting template to browser", err)
+		return err
 	}
+
+	return nil
 }
 
 // CreateTemplateCache creates a template cache as a map
